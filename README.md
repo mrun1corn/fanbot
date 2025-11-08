@@ -26,7 +26,7 @@ A Python Telegram bot (python-telegram-bot) that talks to iDRAC via `ipmitool` t
    DEFAULT_FAN_PERCENT=30
    ```
    Adjust the poll interval (seconds), RPM delta required for a notification, and how often the bot should re-apply your chosen fan speed.
-   `DEFAULT_FAN_PERCENT` lets the bot immediately lock fans to that percentage (e.g., 30%) whenever it starts, so restarts do not spike noise.
+   `DEFAULT_FAN_PERCENT` tells the bot to lock fans to that percentage at startup and keep retrying after boot until iDRAC accepts the override.
 
 ## Running the bot
 ```bash

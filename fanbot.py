@@ -276,14 +276,21 @@ class FanBot:
         if self.config.default_manual_percent is None:
             return
         percent = self.config.default_manual_percent
+        # Set desired state even before the first successful push so the
+        # periodic reapply task keeps retrying after boot if iDRAC is slow.
+        self.manual_speed = percent
+        self.last_speed_push = None
+        self.failed_reapply = False
         try:
             await asyncio.to_thread(self.ipmi.apply_manual_speed, percent)
         except IPMIError as exc:
-            logging.error("Failed to apply default fan speed %s%%: %s", percent, exc)
+            logging.warning(
+                "Failed to apply default fan speed %s%% at startup (will keep retrying): %s",
+                percent,
+                exc,
+            )
             return
-        self.manual_speed = percent
         self.last_speed_push = time.monotonic()
-        self.failed_reapply = False
         logging.info("Default manual fan speed %s%% applied.", percent)
 
     async def _reapply_manual_speed_if_needed(self, context: ContextTypes.DEFAULT_TYPE) -> None:
