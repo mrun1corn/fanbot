@@ -1,0 +1,17 @@
+[Unit]
+Description=FanBot Telegram controller for iDRAC fans
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=robin
+Group=robin
+WorkingDirectory=/home/robin/fanbot
+EnvironmentFile=/home/robin/fanbot/.env
+ExecStart=/usr/bin/env python3 /home/robin/fanbot/fanbot.py
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

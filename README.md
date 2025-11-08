@@ -34,6 +34,21 @@ python fanbot.py
 ```
 Leave the process running (e.g., systemd service or tmux) so it can keep polling the fans and push Telegram notifications.
 
+## Auto-start on boot (systemd)
+1. Edit `fanbot.service` so `User`, `Group`, `WorkingDirectory`, and `EnvironmentFile` match your Pi’s setup (defaults are `/home/robin/fanbot`).
+2. Copy it into systemd and enable it:
+   ```bash
+   sudo cp fanbot.service /etc/systemd/system/fanbot.service
+   sudo systemctl daemon-reload
+   sudo systemctl enable --now fanbot.service
+   ```
+3. Check status / logs if needed:
+   ```bash
+   systemctl status fanbot.service
+   journalctl -u fanbot.service -f
+   ```
+Systemd will now start the bot at boot and restart it if it crashes, so fan control re-applies automatically after power cycles.
+
 ## Telegram commands
 - `/start` or `/help` – authorize the chat (if restricted) and show usage.
 - `/status` – fetch current fan RPM from `ipmitool sdr list full` and show whether manual control is active.
